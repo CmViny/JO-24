@@ -10915,6 +10915,29 @@ hr.divider-light {
   }
 }
 
+/* Navbar Alternative */
+body.navbar-alternative #mainNav {
+  background-color: #000 !important;
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+body.navbar-alternative #mainNav .navbar-brand,
+body.navbar-alternative #mainNav .nav-link {
+  color: #fff !important;
+}
+
+body.navbar-alternative #mainNav.navbar-shrink {
+  background-color: #000 !important;
+  box-shadow: none !important;
+}
+
+body.navbar-alternative #mainNav.navbar-shrink .navbar-brand,
+body.navbar-alternative #mainNav.navbar-shrink .nav-link {
+  color: #fff !important;
+}
+
+
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 4.5rem);

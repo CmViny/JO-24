@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block title %}
+    <title>Login</title>
+{% endblock %}
+
+{% block body_class %}navbar-alternative{% endblock %}
+{% block content %}
+
+
+    <!-- Header Login-->
+    <header class=" bg-light py-5 mb-3">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-dark">
+                <h1 class="display-4 fw-bolder">Login Page</h1>
+                <p class="lead fw-normal text-dark-50 mb-0">Log in to your account</p>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Login Form-->
+    <div class="container d-flex justify-content-center align-items-center">
+    <form method="POST" action="{% url 'login' %}" style="max-width: 400px; width: 100%;">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Username..." name="username" required>
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" placeholder="Enter your password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{% endblock%}
