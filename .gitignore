@@ -10,7 +10,6 @@ env/
 .env
 
 # Django
-/staticfiles/
 *.log
 
 # IDE
@@ -19,3 +18,11 @@ env/
 
 JO-Virt/
 media/
+
+# Ignore les fichiers générés automatiquement
+/staticfiles/
+/static_root/
+/media/
+
+# Garde les fichiers statiques créés à la main
+!static/*
