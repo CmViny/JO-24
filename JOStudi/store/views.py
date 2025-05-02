@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from offers.models import Offre
 
 def home(request):
-    return render(request, 'home.html', {})
+    offres = Offre.objects.all()
+    return render(request, 'home.html', {'offres': offres})
