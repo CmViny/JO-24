@@ -10917,7 +10917,7 @@ hr.divider-light {
 
 /* Navbar Alternative */
 body.navbar-alternative #mainNav {
-  background-color: #000 !important;
+  background-color: var(--bs-gray-dark) !important;
   box-shadow: none !important;
   transition: none !important;
 }
@@ -10928,7 +10928,7 @@ body.navbar-alternative #mainNav .nav-link {
 }
 
 body.navbar-alternative #mainNav.navbar-shrink {
-  background-color: #000 !important;
+  background-color: var(--bs-gray-dark) !important;
   box-shadow: none !important;
 }
 
