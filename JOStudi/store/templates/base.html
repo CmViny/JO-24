@@ -20,7 +20,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
-    <body class="{% block body_class %}{% endblock %}" id="page-top">
+    <body class="{% block body_class %}{% endblock %} d-flex flex-column min-vh-100" id="page-top">
         <!-- Navigation-->
         {% include 'navbar.html' %}
         
@@ -35,8 +35,11 @@
         {% endif %} {% endcomment %}
         
         <!-- Body-->
-        {% block content %}
-        {% endblock %}
+        <main class="flex-grow-1">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% include 'footer.html' %}
        
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

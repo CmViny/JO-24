@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block title %}
+    <title>Offre</title>
+{% endblock %}
+
+{% block body_class %}navbar-alternative{% endblock %}
+{% block content %}
+
+
+    <!-- Header Offre-->
+    <header class=" bg-dark py-5 mb-3">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h3 class="display-3 fw-bolder">Détails</h3>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Offre Body-->
+    <div class="card mb-2">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ offre.image.url }}" class="img-fluid rounded-start" alt="{{ offre.titre }}" style="height:300px">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ offre.titre }}</h5>
+              <p class="card-text"><strong>Description :</strong> {{ offre.description }}</p>
+              <p class="card-text"><strong>Prix :</strong> {{ offre.prix }} €</p>
+              <p class="card-text"><strong>Type :</strong> {{ offre.get_type_billet_display }}</p>
+              <p class="card-text"><strong>Date disponible :</strong> {{ offre.date_disponible }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+{% endblock%}

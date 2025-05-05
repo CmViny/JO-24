@@ -63,8 +63,8 @@
         <div class="row g-0">
             {% for offre in offres %}
             <div class="col-lg-4 col-sm-6">
-                <a class="portfolio-box" href="{{ offre.image.url }}" title="Jeux Olympiques 2024">
-                    <img class="img-fluid" src="{{ offre.image.url }}" alt="..." />
+                <a class="portfolio-box" href="{% url 'offer' pk=offre.id %}" title="{{ offre.titre }}">
+                    <img class="img-fluid" src="{{ offre.image.url }}" alt="{{ offre.titre }}" style="height:50vh"/>
                     <div class="portfolio-box-caption">
                         <div class="project-category text-white-50">Billet</div>
                         <div class="project-name">{{ offre.titre }}</div>
@@ -76,6 +76,4 @@
         </div>
     </div>
 </div>
-<!-- Footer-->
-{% include 'footer.html' %}
 {% endblock %}
