@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Nos formules - Offres de billets</title>
+{% endblock %}
+
+{% block body_class %}navbar-alternative{% endblock %}
+
+{% block content %}
+
+    <!-- Header Formules-->
+    <header class="bg-dark py-5 mb-3">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h3 class="display-3 fw-bolder">Formules</h3>
+            </div>
+        </div>
+    </header>
+
+    <!-- Formules -->
+    <div class="container my-5">
+        <div class="text-center mb-4">
+            <h2>Découvrez nos formules</h2>
+            <p class="lead">Choisissez l’offre qui vous convient le mieux : <strong>Solo</strong> pour une personne, <strong>Duo</strong> pour deux, ou <strong>Famille</strong> pour jusqu’à quatre personnes.</p>
+        </div>
+    
+        <div class="row text-center">
+            {% for formule in formules %}
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h4 class="card-subtitle mb-2 text-muted">{{ formule.emoji }} {{ formule.label }}</h4>
+                            <p class="card-text">{{ formule.description|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Portfolio -->
+    <div id="portfolio">
+        <div class="container-fluid p-0">
+            <div class="row g-0">
+                {% for offre in offres %}
+                <div class="col-lg-3 col-sm-6">
+                    <a class="portfolio-box" href="{% url 'offer' pk=offre.id %}" title="{{ offre.titre }}">
+                        <img class="img-fluid" src="{{ offre.image.url }}" alt="{{ offre.titre }}" style="height:50vh"/>
+                        <div class="portfolio-box-caption">
+                            <div class="project-category text-white-50">Billet</div>
+                            <div class="project-name">{{ offre.titre }}</div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
