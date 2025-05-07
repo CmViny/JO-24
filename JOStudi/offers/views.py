@@ -3,7 +3,9 @@ from offers.models import Offre
 
 def offer(request, pk):
     offre = get_object_or_404(Offre, id=pk)
-    return render(request, 'offre.html', {'offre': offre})
+    prix_solo = offre.get_prix('solo')
+    return render(request, 'offre.html', {'offre': offre, 'prix_solo': prix_solo})
+
 
 def formules(request):
     offres = Offre.objects.all()

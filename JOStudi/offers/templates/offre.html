@@ -28,13 +28,91 @@
             <div class="card-body">
               <h5 class="card-title">{{ offre.titre }}</h5>
               <p class="card-text"><strong>Description :</strong> {{ offre.description }}</p>
-              <p class="card-text"><strong>Prix :</strong> {{ offre.prix }} €</p>
+
+              <p class="card-text">
+                <strong>Prix :</strong>
+                <span id="prix_affiche">{{ prix_solo }}</span> €
+              </p>
+              
               <p class="card-text"><strong>Type :</strong> {{ offre.get_type_billet_display }}</p>
               <p class="card-text"><strong>Date disponible :</strong> {{ offre.date_disponible }}</p>
+
+              <div class="mb-3">
+                <label for="type_billet" class="form-label">Type de billet :</label>
+                <select id="type_billet" class="form-select">
+                  <option value="solo">Solo</option>
+                  <option value="duo">Duo</option>
+                  <option value="famille">Famille</option>
+                </select>
+              </div>
+
+              <button type="button" data-product="{{ offre.id }}" class="btn btn-secondary" id="add-cart">Add to Cart</button>
             </div>
           </div>
         </div>
       </div>
-      
+
+<!--Script Cart Add-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addToCartButton = document.getElementById("add-cart");
+
+    addToCartButton.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        const offreId = this.dataset.product;
+        const typeBillet = document.getElementById("type_billet").value;
+        const csrfToken = "{{ csrf_token }}";
+
+        const formData = new FormData();
+        formData.append("offre_id", offreId);
+        formData.append("type_billet", typeBillet);
+        formData.append("action", "post");
+
+        try {
+            const response = await fetch("{% url 'cart_add' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            location.reload();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+  });
+</script>
+
+<!--Script Offers Price-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const typeBilletSelect = document.getElementById("type_billet");
+    const prixElement = document.getElementById("prix_affiche");
+    const basePrix = parseFloat("{{ offre.prix }}");
+
+    const multiplicateurs = {
+      solo: 1,
+      duo: 1.5,
+      famille: 2
+    };
+
+    typeBilletSelect.addEventListener("change", function () {
+      const selectedType = this.value;
+      const multiplier = multiplicateurs[selectedType] || 1;
+      const newPrice = (basePrix * multiplier).toFixed(2);
+      prixElement.textContent = newPrice;
+    });
+  });
+</script>
+
 
 {% endblock%}

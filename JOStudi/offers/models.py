@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from decimal import Decimal
 
 class Offre(models.Model):
     SOLO = 'solo'
@@ -26,10 +27,10 @@ class Offre(models.Model):
     def get_prix(self, type_billet):
         # Dictionnaire des multiplicateurs pour chaque type de billet
         multiplicateurs = {
-            self.SOLO: 1,
-            self.DUO: 1.5,
-            self.FAMILLE: 2,
+            self.SOLO: Decimal('1'),
+            self.DUO: Decimal('1.5'),
+            self.FAMILLE: Decimal('2'),
         }
 
         # Retourner le prix en fonction du type de billet, ou le prix de base si type inconnu
-        return self.prix * multiplicateurs.get(type_billet, 1)
+        return self.prix * multiplicateurs.get(type_billet, Decimal('1'))
