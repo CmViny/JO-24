@@ -9,7 +9,8 @@ from django.core.exceptions import ValidationError
 def cart_summary(request):
     cart = Cart(request)
     cart_offres = cart.get_prods()
-    return render(request, 'cart_summary.html', {'cart_offres': cart_offres})
+    totals = cart.get_totals()
+    return render(request, 'cart_summary.html', {'cart_offres': cart_offres, 'cart_total': totals})
 
 def cart_add(request):
     cart = Cart(request)
@@ -24,9 +25,10 @@ def cart_add(request):
             cart.add(product=cart_product,quantity=quantity, type_billet=type_billet)
 
             cart_quantity = len(cart)
+            cart_total = cart.get_totals()
 
             messages.success(request, 'Produit ajouté au panier...')
-            return JsonResponse({"qty": cart_quantity})
+            return JsonResponse({"qty": cart_quantity, "cart_total": f"{cart_total:.2f}"})
         
     return JsonResponse({"error": "Requête invalide"}, status=400)
 
@@ -46,11 +48,13 @@ def cart_update(request):
 
             updated_price = product.get_prix(type_billet)
             total_price = float(updated_price) * quantity
+            cart_total = cart.get_totals()
 
             return JsonResponse({
                 "message": "Cart updated",
                 "updated_price": f"{updated_price:.2f}",
                 "total_price": f"{total_price:.2f}",
+                "cart_total": f"{cart_total:.2f}",
                 "key": f"{offre_id}_{type_billet}"
             })
 
@@ -72,7 +76,8 @@ def cart_delete(request):
 
                 # Delete the product in the cart
                 cart.delete(product=product)
-                return JsonResponse({"message": "Item deleted", "cart_quantity": len(cart)})
+                cart_total = cart.get_totals()
+                return JsonResponse({"message": "Item deleted", "cart_quantity": len(cart), "cart_total": f"{cart_total:.2f}"})
             
             except (ValueError, ValidationError):
                 return JsonResponse({"error": "Invalid UUID format"}, status=400)

@@ -58,6 +58,7 @@
             </div>
         </div>
         {% endfor %}
+        <strong>Total du panier :</strong> <span id="total_cart">{{ cart_total|floatformat:2 }} €</span><br>
     {% else %}
         <center><p>Votre panier est vide.</p></center>
     {% endif %}
@@ -89,6 +90,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.getElementById(`prix_unitaire_${key}`).textContent = `${data.updated_price} €`;
                 document.getElementById(`prix_total_${key}`).textContent = `${data.total_price} €`;
+
+                // Mettre à jour le total du panier
+                document.getElementById("total_cart").textContent = `${data.cart_total} €`;
             }
         });
     });
@@ -113,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
                 e.target.closest('.card').remove();
                 const data = await response.json();
+                document.getElementById("total_cart").textContent = `${data.cart_total} €`;
                 document.getElementById("cart_quantity").textContent = data.cart_quantity;
 
             } else {
