@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {%block title %}
     <title>Offre</title>
@@ -37,16 +38,29 @@
               <p class="card-text"><strong>Type :</strong> {{ offre.get_type_billet_display }}</p>
               <p class="card-text"><strong>Date disponible :</strong> {{ offre.date_disponible }}</p>
 
-              <div class="mb-3">
-                <label for="type_billet" class="form-label">Type de billet :</label>
-                <select id="type_billet" class="form-select">
-                  <option value="solo">Solo</option>
-                  <option value="duo">Duo</option>
-                  <option value="famille">Famille</option>
-                </select>
-              </div>
+              <!--Type-->
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="type_billet" class="form-label">Type de billet :</label>
+                  <select id="type_billet" class="form-select">
+                    <option value="solo">Solo</option>
+                    <option value="duo">Duo</option>
+                    <option value="famille">Famille</option>
+                  </select>
+                </div>
 
-              <button type="button" data-product="{{ offre.id }}" class="btn btn-secondary" id="add-cart">Add to Cart</button>
+              <!--Quantity-->
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="quantity_{{ offre.id }}">Quantité :</label>
+                  <select class="form-select form-select-sm mb-2" id="quantity_{{ offre.id }}">                  
+                        {% for i in 1|to:6 %}
+                            <option value="{{ i }}" {% if item.quantity == i %}selected{% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="button" data-product="{{ offre.id }}" class="btn btn-secondary" id="add-cart">Add to Cart</button>
+                </div>
             </div>
           </div>
         </div>
@@ -62,11 +76,13 @@
 
         const offreId = this.dataset.product;
         const typeBillet = document.getElementById("type_billet").value;
+        const quantity = document.getElementById(`quantity_${offreId}`).value;
         const csrfToken = "{{ csrf_token }}";
 
         const formData = new FormData();
         formData.append("offre_id", offreId);
         formData.append("type_billet", typeBillet);
+        formData.append("quantity", quantity);
         formData.append("action", "post");
 
         try {
