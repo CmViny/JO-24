@@ -10,6 +10,7 @@ class Utilisateur(models.Model):
     adresse = models.CharField(max_length=255, null=True, blank=True)
     date_inscription = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
+    old_cart = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.user.username

@@ -5,7 +5,6 @@ from .cart import Cart
 from offers.models import Offre
 from uuid import UUID
 from django.core.exceptions import ValidationError
-from django.views.decorators.http import require_GET
 
 def cart_summary(request):
     cart = Cart(request)
