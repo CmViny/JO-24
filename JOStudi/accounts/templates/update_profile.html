@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block title %}
+    <title>Update Profile</title>
+{% endblock %}
+
+{% block body_class %}navbar-alternative{% endblock %}
+{% block content %}
+
+
+    <!-- Header Update Profile-->
+    <header class=" bg-dark py-5 mb-3">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Mise à jour du profil</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Modifiez les informations de votre profil</p>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Register Form-->
+    <div class="container d-flex justify-content-center align-items-center">
+    <form method="POST" action="{% url 'update_profile' %}" style="max-width: 400px; width: 100%;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Mise à jour du profil</button>
+        <br/><br/>
+    </form>
+</div>
+
+{% endblock%}

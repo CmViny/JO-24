@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django import forms
-from .forms import SignUpForm
+from .forms import SignUpForm, UpdateProfileForm
 from .models import Utilisateur
 from cart.cart import Cart
 from offers.models import Offre
 import json
+from django.contrib.auth.decorators import login_required
 
 def login_user(request):
     if request.method == 'POST':
@@ -63,8 +61,6 @@ def login_user(request):
 
     return render(request, 'login.html')
 
-
-
 def logout_user(request):
     logout(request)
     messages.success(request, "Vous avez été déconnecté avec succès.")
@@ -88,3 +84,19 @@ def register_user(request):
             return redirect('register')
     else:
         return render(request, 'register.html', {'form': form})
+    
+@login_required
+def update_profile(request):
+    user = request.user
+    utilisateur = Utilisateur.objects.get(user=user)
+
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, instance=user, utilisateur_instance=utilisateur)
+        if form.is_valid():
+            form.save(utilisateur_instance=utilisateur)
+            messages.success(request, "Votre profil a été mis à jour avec succès.")
+            return redirect('home')
+    else:
+        form = UpdateProfileForm(instance=user, utilisateur_instance=utilisateur)
+
+    return render(request, 'update_profile.html', {'form': form})

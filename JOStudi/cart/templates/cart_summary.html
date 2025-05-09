@@ -9,12 +9,12 @@
 <header class="bg-dark py-5 mb-3">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Cart Summary</h1>
+            <h1 class="display-4 fw-bolder">Résumé du panier</h1>
         </div>
     </div>
 </header>
 
-<div class="container">
+<div class="container" id="cart-container">
     {% if cart_offres %}
         {% for item in cart_offres %}
         <div class="card mb-3">
@@ -49,7 +49,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
-                                <button type="button" data-key="{{ item.key }}" class="btn btn-danger delete-cart me-2">Remove</button>
+                                <button type="button" data-key="{{ item.key }}" class="btn btn-danger delete-cart me-2">Supprimer</button>
                                 <button type="button" data-key="{{ item.key }}" class="btn btn-secondary update-cart">Update</button>
                             </div>
                         </div>
@@ -58,7 +58,9 @@
             </div>
         </div>
         {% endfor %}
-        <strong>Total du panier :</strong> <span id="total_cart">{{ cart_total|floatformat:2 }} €</span><br>
+        <div id="cart-total-wrapper">
+            <strong>Total du panier :</strong> <span id="total_cart">{{ cart_total|floatformat:2 }} €</span><br>
+        </div>
     {% else %}
         <center><p>Votre panier est vide.</p></center>
     {% endif %}
@@ -117,9 +119,18 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
                 e.target.closest('.card').remove();
                 const data = await response.json();
-                document.getElementById("total_cart").textContent = `${data.cart_total} €`;
                 document.getElementById("cart_quantity").textContent = data.cart_quantity;
 
+                // Vérifier si le panier est vide
+                const remainingCards = document.querySelectorAll('.card');
+
+                if (remainingCards.length === 0) {
+                    // Aucun produit dans le panier
+                    document.getElementById("cart-container").innerHTML = '<center><p>Votre panier est vide.</p></center>';
+                } else {
+                    // Mettre à jour le total du panier
+                    document.getElementById("total_cart").textContent = `${data.cart_total} €`;
+                }
             } else {
                 alert("Erreur lors de la suppression du produit.");
             }
