@@ -7,6 +7,45 @@ from cart.cart import Cart
 import uuid
 
 @login_required
+def commandes(request):
+    current_user = Utilisateur.objects.get(user=request.user)
+
+    # Récupère toutes les transactions réussies de l'utilisateur
+    transactions = Transaction.objects.filter(
+        reservation__utilisateur=current_user,
+        statut=Transaction.REUSSIE
+    ).distinct().order_by('-date_transaction')
+
+    return render(request, 'commandes.html', {
+        'transactions': transactions
+    })
+
+@login_required
+def recapitulatif(request):
+    code = request.GET.get('code')
+    current_user = Utilisateur.objects.get(user=request.user)
+
+    transaction = Transaction.objects.filter(
+        code_transaction=code,
+        reservation__utilisateur=current_user,
+        statut=Transaction.REUSSIE
+    ).distinct().first()
+
+    if not transaction:
+        return render(request, 'recapitulatif.html', {'error': 'Aucune transaction trouvée.'})
+
+    reservations = Reservation.objects.filter(
+        transaction=transaction,
+        utilisateur=current_user
+    ).select_related('offre', 'qrcode')
+
+    return render(request, 'recapitulatif.html', {
+        'reservations': reservations,
+        'transaction': transaction
+    })
+
+
+@login_required
 def mock_payment(request):
     cart = Cart(request)
     current_user = Utilisateur.objects.get(user=request.user)
@@ -52,4 +91,4 @@ def mock_payment(request):
     cart.clear()
 
     reservations = Reservation.objects.filter(transaction=transaction).select_related('offre', 'qrcode')
-    return render(request, 'payment_success.html', {'reservations': reservations,'transaction': transaction})
+    return render(request, 'recapitulatif.html', {'reservations': reservations,'transaction': transaction})
