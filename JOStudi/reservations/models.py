@@ -4,6 +4,12 @@ from django.utils import timezone
 from accounts.models import Utilisateur
 from offers.models import Offre
 
+import uuid
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.db import models
+import qrcode # type: ignore
+
 class Transaction(models.Model):
     EN_ATTENTE = 'en_attente'
     REUSSIE = 'reussie'
@@ -56,6 +62,17 @@ class QRCode(models.Model):
     reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE)
     code = models.CharField(max_length=255, unique=True)
     date_generation = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to='uploads/qrcodes/', blank=True, null=True)
 
     def __str__(self):
         return f"QR {self.reservation}" 
+
+    def save(self, *args, **kwargs):
+        if not self.image:
+            qr = qrcode.make(self.code)
+            buffer = BytesIO()
+            qr.save(buffer, format='PNG')
+            file_name = f"qr_{self.code}.png"
+            self.image.save(file_name, ContentFile(buffer.getvalue()), save=False)
+
+        super().save(*args, **kwargs)

@@ -1,0 +1,9 @@
+asgiref==3.8.1
+backports.zoneinfo==0.2.1
+click==8.1.8
+Django==4.2.20
+pillow==10.4.0
+pypng==0.20220715.0
+qrcode==7.4.2
+sqlparse==0.5.3
+typing-extensions==4.13.2

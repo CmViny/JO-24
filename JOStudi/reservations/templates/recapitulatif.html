@@ -28,7 +28,18 @@
         <th scope="row">{{ forloop.counter }}</th>
         <td>{{ reservation.offre.titre }}</td>
         <td>{{ reservation.type_billet|title }}</td>
-        <td><code>{{ reservation.qrcode.code }}</code></td>
+        
+        <td>
+            {% if reservation.qrcode.image %}
+                <a href="{{ reservation.qrcode.image.url }}" download>
+                    <img src="{{ reservation.qrcode.image.url }}" alt="QR Code" width="80" height="80">
+                </a><br>
+                <small><a href="{{ reservation.qrcode.image.url }}" download>Télécharger</a></small>
+            {% else %}
+                <code>{{ reservation.qrcode.code }}</code>
+            {% endif %}
+        </td>
+
         <td>{{ reservation.date_reservation|date:"d/m/Y H:i" }}</td>
         </tr>
         {% empty %}

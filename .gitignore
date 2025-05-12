@@ -16,13 +16,16 @@ env/
 .vscode/
 .idea/
 
+# Environnement virtuel
 JO-Virt/
-media/
 
-# Ignore les fichiers générés automatiquement
+# Media (images uploadées, QR codes, etc.)
+/media/
+media/
+# Static auto-generated
 /staticfiles/
 /static_root/
-/media/
 
-# Garde les fichiers statiques créés à la main
+# Garder les fichiers statiques ajoutés à la main
 !static/*
+
