@@ -61,6 +61,11 @@
         <div id="cart-total-wrapper">
             <strong>Total du panier :</strong> <span id="total_cart">{{ cart_total|floatformat:2 }} €</span><br>
         </div>
+
+        <div id="cart-payment">
+            <a href="{% url 'mock_payment' %}" class="btn btn-primary">Payer</a>
+        </div>
+
     {% else %}
         <center><p>Votre panier est vide.</p></center>
     {% endif %}

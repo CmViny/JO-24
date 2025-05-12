@@ -19,9 +19,15 @@ class Transaction(models.Model):
     montant = models.DecimalField(max_digits=6, decimal_places=2)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default=EN_ATTENTE)
     date_transaction = models.DateTimeField(default=timezone.now)
+    code_transaction = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):
         return f"Transaction {self.id}"
+    
+    def generate_code_transaction(self, *args, **kwargs):
+        if not self.code_transaction:
+            self.code_transaction = uuid.uuid4().hex
+        super().save(*args, **kwargs)
 
 class Reservation(models.Model):
     EN_ATTENTE = 'en_attente'
@@ -38,10 +44,12 @@ class Reservation(models.Model):
     date_reservation = models.DateTimeField(default=timezone.now)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default=EN_ATTENTE)
     transaction = models.ForeignKey(Transaction, null=True, blank=True, on_delete=models.SET_NULL)
+    type_billet = models.CharField(max_length=20, choices=[('solo', 'Solo'), ('duo', 'Duo'), ('famille', 'Famille')], default='solo')
 
 
     def __str__(self):
         return f"Réservation {self.id}"
+
 
 class QRCode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

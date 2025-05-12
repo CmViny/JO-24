@@ -40,6 +40,7 @@ class Cart():
 
         if key not in self.cart:
             self.cart[key] = {
+                'id': product_id,
                 'price': str(product.get_prix(type_billet)),
                 'quantity': int(quantity),
                 'title': str(product.titre),
@@ -58,6 +59,7 @@ class Cart():
             self.cart[key]['quantity'] += int(quantity)
         else:
             self.cart[key] = {
+                'id': product_id,
                 'price': str(product.get_prix(type_billet)),
                 'quantity': int(quantity),
                 'title': str(product.titre),
@@ -89,6 +91,7 @@ class Cart():
 
         # Add the new entry with the updated quantity
         self.cart[key] = {
+            'id': offre_id,
             "quantity": quantity,
             "type_billet": type_billet,
             "price": str(product.get_prix(type_billet))

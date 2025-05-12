@@ -42,6 +42,7 @@ def login_user(request):
                             product = Offre.objects.get(id=product_id)
                             # Ajout sans fusionner avec ancien panier session
                             cart.cart[key] = {
+                                'id': product_id,
                                 'price': str(product.get_prix(type_billet)),
                                 'quantity': int(value['quantity']),
                                 'title': str(product.titre),
