@@ -117,8 +117,6 @@ def mock_payment(request):
                 code = f"{code_utilisateur}_{transaction.code_transaction}_{uuid.uuid4().hex[:6]}"
                 qr_url = request.build_absolute_uri(reverse('billet_numerique', args=[code]))
 
-                print(f"QR URL : {qr_url}")  # Log l'URL générée
-
                 # Appel de la fonction pour générer l'image du QR code
                 buffer = generate_qr_code(qr_url)
 
@@ -136,6 +134,8 @@ def mock_payment(request):
             continue
 
     cart.clear()
+    current_user.old_cart = None
+    current_user.save()
 
     reservations = Reservation.objects.filter(transaction=transaction).select_related('offre', 'qrcode')
     return render(request, 'recapitulatif.html', {'reservations': reservations,'transaction': transaction})

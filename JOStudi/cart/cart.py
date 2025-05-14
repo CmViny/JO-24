@@ -89,7 +89,6 @@ class Cart():
         for k in keys_to_remove:
             self.cart.pop(k, None)
 
-        # Add the new entry with the updated quantity
         self.cart[key] = {
             'id': offre_id,
             "quantity": quantity,
