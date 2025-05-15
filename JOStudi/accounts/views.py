@@ -15,22 +15,16 @@ import qrcode # type: ignore
 
 # 2FA
 
+@login_required
 def activate_2fa(request):
     utilisateur = request.user.utilisateur
 
-    # Si 2FA est déjà activé, on redirige vers la vérification
     if utilisateur.totp_secret:
         return redirect('verify_2fa')
-
-    # Génération et enregistrement du secret
+    
     secret = pyotp.random_base32()
-    utilisateur.totp_secret = secret
-    utilisateur.save()
+    request.session['temp_totp_secret'] = secret
 
-    # Stockage temporaire du secret dans la session
-    request.session['totp_secret'] = secret
-
-    # Redirige automatiquement vers le formulaire de vérification
     return redirect('verify_2fa')
 
 
@@ -38,7 +32,7 @@ def activate_2fa(request):
 def verify_2fa(request):
     utilisateur = request.user.utilisateur
     qr_image = None
-    secret = utilisateur.totp_secret or request.session.get('totp_secret')
+    secret = request.session.get('temp_totp_secret') or utilisateur.totp_secret
 
     if secret:
         totp = pyotp.TOTP(secret)
@@ -47,24 +41,26 @@ def verify_2fa(request):
         qr = qrcode.make(otp_url)
         buffer = io.BytesIO()
         qr.save(buffer, format='PNG')
-        qr_image = base64.b64encode(buffer.getvalue()).decode()  # image encodée en base64
+        qr_image = base64.b64encode(buffer.getvalue()).decode()
 
     if request.method == 'POST':
         code = request.POST.get('code')
 
-        if utilisateur.totp_secret:
-            totp = pyotp.TOTP(utilisateur.totp_secret)
-            # Vérification du code TOTP
+        if secret:
+            totp = pyotp.TOTP(secret)
             if totp.verify(code, valid_window=1):
+                utilisateur.totp_secret = secret
                 utilisateur.is_2fa_verified = True
                 utilisateur.save()
+
                 request.session['is_2fa_verified'] = True
-                request.session.pop('totp_secret', None)
+                request.session.pop('temp_totp_secret', None)
+
                 return redirect('home')
             else:
                 messages.error(request, "Code incorrect.")
         else:
-            messages.error(request, "2FA non activé.")
+            messages.error(request, "Erreur : aucun secret trouvé.")
 
     return render(request, 'verify_2fa.html', {
         'qr_image': qr_image,

@@ -18,6 +18,15 @@
             </div>
         </div>
     </header>
+
+    <!-- Activate 2FA -->
+    {% if not request.user.utilisateur.totp_secret %}
+        <div class="mt-4 mb-4">
+            <a href="{% url 'activate_2fa' %}" class="btn btn-outline-warning w-100">
+            🔐 Activer l’authentification à deux facteurs
+            </a>
+        </div>
+    {% endif %}
     
     <!-- Update Profil Form-->
     <div class="container d-flex justify-content-center align-items-center">
@@ -27,12 +36,6 @@
         <button type="submit" class="btn btn-primary">Mise à jour du profil</button>
         <br/><br/>
     </form>
-
-    <!-- Activate 2FA -->
-    {% if not request.user.utilisateur.totp_secret %}
-        <a href="{% url 'activate_2fa' %}">Activer 2FA</a>
-    {% endif %}
-
 </div>
 
 {% endblock%}
