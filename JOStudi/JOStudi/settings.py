@@ -150,7 +150,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # URL de connexion
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/accounts/login'
 
 # Clé primaire par défaut
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
