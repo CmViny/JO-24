@@ -15,6 +15,7 @@ class Utilisateur(models.Model):
     code_utilisateur = models.CharField(max_length=64, blank=True, null=True)
     totp_secret = encrypt(models.CharField(max_length=32, blank=True, null=True))
     is_2fa_verified = models.BooleanField(default=False)
+    is_2fa_enabled = models.BooleanField(default=False)
 
 
     def __str__(self):

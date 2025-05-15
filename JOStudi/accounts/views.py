@@ -19,13 +19,16 @@ import qrcode # type: ignore
 def activate_2fa(request):
     utilisateur = request.user.utilisateur
 
-    if utilisateur.totp_secret:
+    # Si 2FA déjà activée
+    if utilisateur.is_2fa_enabled:
         return redirect('verify_2fa')
-    
+
+    # Génère un secret temporaire stocké uniquement en session
     secret = pyotp.random_base32()
     request.session['temp_totp_secret'] = secret
 
     return redirect('verify_2fa')
+
 
 
 @login_required
@@ -51,16 +54,16 @@ def verify_2fa(request):
             if totp.verify(code, valid_window=1):
                 utilisateur.totp_secret = secret
                 utilisateur.is_2fa_verified = True
+                utilisateur.is_2fa_enabled = True
                 utilisateur.save()
 
                 request.session['is_2fa_verified'] = True
                 request.session.pop('temp_totp_secret', None)
-
                 return redirect('home')
             else:
                 messages.error(request, "Code incorrect.")
         else:
-            messages.error(request, "Erreur : aucun secret trouvé.")
+            messages.error(request, "Erreur : secret manquant.")
 
     return render(request, 'verify_2fa.html', {
         'qr_image': qr_image,
