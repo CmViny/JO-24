@@ -27,6 +27,12 @@
         <button type="submit" class="btn btn-primary">Mise à jour du profil</button>
         <br/><br/>
     </form>
+
+    <!-- Activate 2FA -->
+    {% if not request.user.utilisateur.totp_secret %}
+        <a href="{% url 'activate_2fa' %}">Activer 2FA</a>
+    {% endif %}
+
 </div>
 
 {% endblock%}

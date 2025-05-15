@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container py-5">
+    <h2>Vérification 2FA</h2>
+
+    {% if qr_image %}
+      <p>Scanne ce QR code avec ton application d'authentification :</p>
+      <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+
+      <p><strong>Ou entre ce code manuellement :</strong><br>{{ manual_code }}</p>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <label for="code">Entrez le code à 6 chiffres de l'application :</label><br>
+      <input type="text" name="code" id="code" required>
+      <button type="submit">Vérifier</button>
+    </form>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}
