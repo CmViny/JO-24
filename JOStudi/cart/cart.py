@@ -52,6 +52,9 @@ class Cart():
 
     
     def add(self, product, quantity=1, type_billet='solo'):
+        if quantity <= 0:
+            raise ValueError("Quantity must be positive")
+
         product_id = str(product.id)
         key = f"{product_id}_{type_billet}"
 
@@ -82,6 +85,9 @@ class Cart():
 
 
     def update(self, product: object, quantity: int, type_billet: str):
+        if quantity <= 0:
+            raise ValueError("Quantity must be positive")
+
         offre_id = str(product.id)
         key = f"{offre_id}_{type_billet}"
 
@@ -127,5 +133,5 @@ class Cart():
         return total
 
     def clear(self):
-        self.session['session_key'] = {}
+        del self.session['cart']
         self.session.modified = True

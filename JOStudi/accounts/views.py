@@ -14,22 +14,17 @@ import io
 import qrcode # type: ignore
 
 # 2FA
-
 @login_required
 def activate_2fa(request):
     utilisateur = request.user.utilisateur
-
     # Si 2FA déjà activée
     if utilisateur.is_2fa_enabled:
         return redirect('verify_2fa')
-
     # Génère un secret temporaire stocké uniquement en session
     secret = pyotp.random_base32()
     request.session['temp_totp_secret'] = secret
 
     return redirect('verify_2fa')
-
-
 
 @login_required
 def verify_2fa(request):
