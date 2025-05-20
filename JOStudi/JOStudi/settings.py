@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+# Load environment variables from .env file
 load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -111,9 +112,18 @@ CSRF_COOKIE_HTTPONLY = True
 # Configuration de la base de données
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER' : os.environ.get('DB_USER'),
+        'PASSWORD' : os.environ.get('DB_PASSWORD'),
+        'HOST' : os.environ.get('DB_HOST'),
+        'PORT' : os.environ.get('DB_PORT'),    
     }
+    # For local development:
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 }
 
 # Validation du mot de passe
