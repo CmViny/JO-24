@@ -19,8 +19,8 @@ DEBUG = False
 
 SECURE_SSL_REDIRECT = False # Redirige toutes les requêtes HTTP vers HTTPS
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','jo-24-production.up.railway.app', 'https://jo-24-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['jo-24-production.up.railway.app', 'https://jo-24-production.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','jo-24-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://jo-24-production.up.railway.app']
 
 # Application definition
 
