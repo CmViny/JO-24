@@ -15,6 +15,5 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('reservations/', include('reservations.urls')),
 ] 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=os.path.join(BASE_DIR, 'static'))
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=os.path.join(BASE_DIR, 'static'))
