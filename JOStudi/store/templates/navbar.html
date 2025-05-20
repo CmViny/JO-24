@@ -1,0 +1,31 @@
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="{% url 'home' %}">Jeux Olympiques 2024</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Accueil</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Se déconnecter</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Se connecter</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">S'inscrire</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'update_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'commandes' %}">Commandes</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'formules' %}">Formules</a></li>
+            </ul>
+            <!--Cart-->
+            <form class="d-flex ms-lg-3">
+                <a href="{% url 'cart_summary' %}" class="btn btn-outline-dark">
+                    <i class="bi-cart-fill me-1"></i>
+                    Panier
+                    <span id="cart_quantity" class="badge bg-dark text-white ms-1 rounded-pill">{{ cart | length }}</span>
+                </a>
+            </form>
+        </div>
+    </div>
+</nav>
