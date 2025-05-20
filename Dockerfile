@@ -16,4 +16,4 @@ COPY JOStudi/ /app/
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn JOStudi.wsgi:application --bind 0.0.0.0:$PORT"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && exec gunicorn JOStudi.wsgi:application --bind 0.0.0.0:${PORT:-8080}"]
