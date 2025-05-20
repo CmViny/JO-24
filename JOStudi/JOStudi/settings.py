@@ -15,11 +15,12 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 SECURE_SSL_REDIRECT = False # Redirige toutes les requêtes HTTP vers HTTPS
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','jo-24-production.up.railway.app', 'https://jo-24-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['jo-24-production.up.railway.app', 'https://jo-24-production.up.railway.app']
 
 # Application definition
 
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
     'offers',
     'reservations',
     'cart',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'accounts.middleware.TwoFactorRequiredMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 # Auth backends
@@ -152,8 +155,10 @@ USE_TZ = True
 # Fichiers statiques
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Whitenoise configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Fichiers médias
 MEDIA_URL = '/media/'
