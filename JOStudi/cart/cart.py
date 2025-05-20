@@ -127,11 +127,11 @@ class Cart():
     
     def get_totals(self):
         total = 0
-        # Parcours tous les éléments du panier et ajoute au total
         for item in self.cart.values():
             total += float(item['price']) * item['quantity']
         return total
 
     def clear(self):
-        del self.session['cart']
-        self.session.modified = True
+        if 'cart' in self.session:
+            del self.session['cart']
+            self.session.modified = True

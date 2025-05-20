@@ -72,24 +72,13 @@ def login_user(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        # Vider le panier session (invité) juste après login
-        cart = Cart(request)
-        cart.clear()  
-
-        # Authentifier l'utilisateur
         user = authenticate(request, username=username, password=password)
-        if user is not None:
+        if user:
             login(request, user)
 
-            # 🔐 Si 2FA activé, on réinitialise la vérif
-            if hasattr(user, 'utilisateur') and user.utilisateur.totp_secret:
-                request.session['is_2fa_verified'] = False
-                return redirect('verify_2fa')
-        
             cart = Cart(request)
 
-            # Récupérer le panier sauvegardé
-            current_user = Utilisateur.objects.get(user__id=request.user.id)
+            current_user = Utilisateur.objects.get(user=user)
             saved_cart = current_user.old_cart
 
             if saved_cart:
@@ -99,29 +88,30 @@ def login_user(request):
                         parts = key.split('_')
                         if len(parts) == 2:
                             product_id, type_billet = parts
-                        else:
-                            continue
-
-                        try:
-                            product = Offre.objects.get(id=product_id)
-                            # Ajout sans fusionner avec ancien panier session
-                            cart.cart[key] = {
-                                'id': product_id,
-                                'price': str(product.get_prix(type_billet)),
-                                'quantity': int(value['quantity']),
-                                'title': str(product.titre),
-                                'type_billet': type_billet
-                            }
-                        except Offre.DoesNotExist:
-                            continue
+                            try:
+                                product = Offre.objects.get(id=product_id)
+                                cart.cart[key] = {
+                                    'id': product_id,
+                                    'price': str(product.get_prix(type_billet)),
+                                    'quantity': int(value['quantity']),
+                                    'title': str(product.titre),
+                                    'type_billet': type_billet
+                                }
+                            except Offre.DoesNotExist:
+                                continue
                     cart.session.modified = True
                 except json.JSONDecodeError:
                     pass
 
+            # 🔐 Gérer la redirection 2FA
+            if hasattr(user, 'utilisateur') and user.utilisateur.totp_secret:
+                request.session['is_2fa_verified'] = False
+                return redirect('verify_2fa')
+
             messages.success(request, "Vous avez été connecté avec succès.")
             return redirect('home')
         else:
-            messages.error(request, "Identifiants invalides, veuillez réessayer.")
+            messages.error(request, "Identifiants invalides.")
             return redirect('login')
 
     return render(request, 'login.html')
