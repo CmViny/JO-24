@@ -14,6 +14,6 @@ RUN pip install -r /app/requirements.txt
 
 COPY JOStudi/ /app/
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn JOStudi.wsgi:application --bind 0.0.0.0:$PORT"]
