@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+venv/
+env/
+.env
+
+# Django
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Environnement virtuel
+JO-Virt/
+
+# Media (images uploadées, QR codes, etc.)
+/media/
+media/
+# Static auto-generated
+/staticfiles/
+/static_root/
+
+# Garder les fichiers statiques ajoutés à la main
+!static/*
+

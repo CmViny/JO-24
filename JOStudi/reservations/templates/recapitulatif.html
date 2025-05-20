@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}<title>Récapitulatif Commande</title>{% endblock %}
+{% block body_class %}navbar-alternative{% endblock %}
+
+{% block content %}
+<div class="container mt-5 py-5">
+    <h2 class="mb-4">Récapitulatif de votre paiement</h2>
+
+    <div class="alert alert-success text-right">
+        <strong>Total payé :</strong> {{ transaction.montant }} €
+    </div>
+
+    <table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Offre</th>
+        <th scope="col">Type de billet</th>
+        <th scope="col">Code QR</th>
+        <th scope="col">Date réservation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservation in reservations %}
+        <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ reservation.offre.titre }}</td>
+        <td>{{ reservation.type_billet|title }}</td>
+        
+        <td>
+            {% if reservation.qrcode.image %}
+                <a href="{{ reservation.qrcode.image.url }}" download>
+                    <img src="{{ reservation.qrcode.image.url }}" alt="QR Code" width="80" height="80">
+                </a><br>
+                <small><a href="{{ reservation.qrcode.image.url }}" download>Télécharger</a></small>
+            {% else %}
+                <code>{{ reservation.qrcode.code }}</code>
+            {% endif %}
+        </td>
+
+        <td>{{ reservation.date_reservation|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+        <td colspan="5" class="text-center">Aucune réservation trouvée.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+{% endblock %}

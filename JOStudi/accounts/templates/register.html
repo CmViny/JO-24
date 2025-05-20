@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Inscription</title>
+{% endblock %}
+
+{% block body_class %}navbar-alternative{% endblock %}
+{% block content %}
+
+    <!-- Header Inscription-->
+    <header class="bg-dark py-5 mb-3">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">S'inscrire</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Inscrivez-vous pour un compte utilisateur</p>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Formulaire d'inscription-->
+    <div class="container d-flex justify-content-center align-items-center">
+        <form method="POST" action="{% url 'register' %}" style="max-width: 400px; width: 100%;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">S'inscrire</button>
+            <br/><br/>
+        </form>
+    </div>
+
+{% endblock %}

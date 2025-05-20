@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}<title>Mes commandes</title>{% endblock %}
+{% block body_class %}navbar-alternative{% endblock %}
+
+{% block content %}
+<div class="container mt-5 py-5">
+    <h2 class="mb-4">Mes commandes</h2>
+
+    {% if transactions %}
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Détails</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ transaction.date_transaction|date:"d/m/Y H:i" }}</td>
+                <td>{{ transaction.montant }} €</td>
+                <td>
+                    <a href="{% url 'recapitulatif' %}?code={{ transaction.code_transaction }}" class="btn btn-sm btn-primary">Voir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Aucune commande trouvée.</p>
+    {% endif %}
+</div>
+{% endblock %}
