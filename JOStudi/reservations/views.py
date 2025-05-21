@@ -78,16 +78,11 @@ def billet_numerique(request, code):
         'offre': offre
     })
 
-def upload_qr_code_to_supabase(code, data):
-    # Génère l'image QR code en mémoire
+def upload_qr_code_to_supabase(code, data, supabase_url, supabase_key, bucket):
     img = qrcode.make(data)
     buffer = BytesIO()
     img.save(buffer, format='PNG')
     buffer.seek(0)
-
-    supabase_url = os.getenv('SUPABASE_URL')
-    supabase_key = os.getenv('SUPABASE_KEY')
-    bucket = os.getenv('SUPABASE_BUCKET')
 
     file_name = f"qrcodes/qr_{code}.png"
     upload_url = f"{supabase_url}/storage/v1/object/{bucket}/{file_name}"
@@ -102,7 +97,6 @@ def upload_qr_code_to_supabase(code, data):
     if response.status_code not in [200, 201]:
         raise Exception(f"Échec de l’upload QR code vers Supabase : {response.text}")
 
-    # URL publique accessible
     public_url = f"{supabase_url}/storage/v1/object/public/{bucket}/{file_name}"
     return public_url
 
@@ -127,10 +121,17 @@ def mock_payment(request):
     )
     transaction.generate_code_transaction()
 
+    # Récupérer les infos de Supabase
+    supabase_url = os.getenv('SUPABASE_URL')
+    supabase_key = os.getenv('SUPABASE_KEY')
+    bucket = os.getenv('SUPABASE_BUCKET')
+
+    if not all([supabase_url, supabase_key, bucket]):
+        raise EnvironmentError("Une ou plusieurs variables d’environnement Supabase sont manquantes.")
+
     # Récupérer le code utilisateur
     code_utilisateur = current_user.code_utilisateur
 
-    # Créer une réservation et QRCode par Billet
     for item in cart.cart.values():
         try:
             offre_id = item.get('id')
@@ -138,7 +139,7 @@ def mock_payment(request):
             type_billet = item.get('type_billet')
             offre = Offre.objects.get(id=offre_id)
 
-            for _ in range(quantity):  # Créer N réservations
+            for _ in range(quantity):
                 reservation = Reservation.objects.create(
                     utilisateur=current_user,
                     offre=offre,
@@ -146,16 +147,14 @@ def mock_payment(request):
                     transaction=transaction,
                     type_billet=type_billet
                 )
-                
-                # Génération du code unique
+
                 code = f"{code_utilisateur}_{transaction.code_transaction}_{uuid.uuid4().hex[:6]}"
                 qr_url = request.build_absolute_uri(reverse('billet_numerique', args=[code]))
 
-                # Upload QR code sur Supabase
-                qr_image_url = upload_qr_code_to_supabase(code, qr_url)
+                # Upload QR code avec paramètres explicites
+                qr_image_url = upload_qr_code_to_supabase(code, qr_url, supabase_url, supabase_key, bucket)
 
-                # Création de l'objet QRCode avec URL
-                qr = QRCode.objects.create(
+                QRCode.objects.create(
                     reservation=reservation,
                     code=code,
                     image=qr_image_url
