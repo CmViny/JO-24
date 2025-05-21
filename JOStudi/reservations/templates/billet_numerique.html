@@ -8,6 +8,6 @@
     <p><strong>Nom :</strong> {{ utilisateur.user.last_name }}</p>
     <p><strong>Prénom :</strong> {{ utilisateur.user.first_name }}</p>
     <p><strong>Code :</strong> {{ qr.code }}</p>
-    <img src="{{ qr.image.url }}" alt="QR Code">
+    <img src="{{ qr.image }}" alt="QR Code">
 </div>
 {% endblock %}
