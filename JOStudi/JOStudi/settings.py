@@ -17,8 +17,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-SECURE_SSL_REDIRECT = False # Redirige toutes les requêtes HTTP vers HTTPS
-
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost','jo-24-production.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://jo-24-production.up.railway.app']
 
@@ -37,6 +35,7 @@ INSTALLED_APPS = [
     'reservations',
     'cart',
     'whitenoise.runserver_nostatic',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +49,7 @@ MIDDLEWARE = [
     'accounts.middleware.TwoFactorRequiredMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
 
 # Auth backends
 AUTHENTICATION_BACKENDS = [
