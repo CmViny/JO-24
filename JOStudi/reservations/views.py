@@ -14,6 +14,9 @@ from .models import QRCode
 import qrcode # type: ignore
 import os
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @login_required
