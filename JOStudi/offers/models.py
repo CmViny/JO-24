@@ -1,7 +1,6 @@
 import uuid
 from django.db import models
 from decimal import Decimal
-from cloudinary_storage.storage import MediaCloudinaryStorage
 
 class Offre(models.Model):
     SOLO = 'solo'
