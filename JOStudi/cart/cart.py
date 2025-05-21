@@ -132,6 +132,7 @@ class Cart():
         return total
 
     def clear(self):
-        if 'cart' in self.session:
-            del self.session['cart']
+        if 'session_key' in self.session:
+            del self.session['session_key']
             self.session.modified = True
+            self.persistence()
