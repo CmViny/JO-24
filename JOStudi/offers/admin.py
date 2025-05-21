@@ -4,7 +4,7 @@ from reservations.models import Reservation
 
 class OffreAdmin(admin.ModelAdmin):
     list_display = ('titre', 'prix', 'nombre_ventes')
-
+    fields = ('titre', 'description', 'prix', 'type_billet', 'date_disponible', 'image')
     def nombre_ventes(self, obj):
         return Reservation.objects.filter(offre=obj).count()
     nombre_ventes.short_description = "Nombre de ventes"
