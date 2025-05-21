@@ -12,6 +12,9 @@ import uuid
 from django.shortcuts import get_object_or_404
 from .models import QRCode
 import qrcode # type: ignore
+import os
+import requests
+
 
 @login_required
 def commandes(request):
@@ -72,6 +75,34 @@ def billet_numerique(request, code):
         'offre': offre
     })
 
+def upload_qr_code_to_supabase(code, data):
+    # Génère l'image QR code en mémoire
+    img = qrcode.make(data)
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    buffer.seek(0)
+
+    supabase_url = os.getenv('SUPABASE_URL')
+    supabase_key = os.getenv('SUPABASE_KEY')
+    bucket = os.getenv('SUPABASE_BUCKET')
+
+    file_name = f"qrcodes/qr_{code}.png"
+    upload_url = f"{supabase_url}/storage/v1/object/{bucket}/{file_name}"
+
+    headers = {
+        "Authorization": f"Bearer {supabase_key}",
+        "Content-Type": "application/octet-stream",
+        "x-upsert": "true",
+    }
+
+    response = requests.put(upload_url, headers=headers, data=buffer.getvalue())
+    if response.status_code not in [200, 201]:
+        raise Exception(f"Échec de l’upload QR code vers Supabase : {response.text}")
+
+    # URL publique accessible
+    public_url = f"{supabase_url}/storage/v1/object/public/{bucket}/{file_name}"
+    return public_url
+
 def generate_qr_code(data):
     img = qrcode.make(data)
     buffer = BytesIO()
@@ -106,29 +137,26 @@ def mock_payment(request):
 
             for _ in range(quantity):  # Créer N réservations
                 reservation = Reservation.objects.create(
-                utilisateur=current_user,
-                offre=offre,
-                statut=Reservation.CONFIRMEE,
-                transaction=transaction,
-                type_billet=type_billet
-            )
+                    utilisateur=current_user,
+                    offre=offre,
+                    statut=Reservation.CONFIRMEE,
+                    transaction=transaction,
+                    type_billet=type_billet
+                )
                 
-                # Génération du code et de l'URL
+                # Génération du code unique
                 code = f"{code_utilisateur}_{transaction.code_transaction}_{uuid.uuid4().hex[:6]}"
                 qr_url = request.build_absolute_uri(reverse('billet_numerique', args=[code]))
 
-                # Appel de la fonction pour générer l'image du QR code
-                buffer = generate_qr_code(qr_url)
+                # Upload QR code sur Supabase
+                qr_image_url = upload_qr_code_to_supabase(code, qr_url)
 
-                # Enregistrement de l'image dans /media/uploads/qrcodes
-                filename = f"{code}.png"
-                django_file = File(buffer)
-
-                # Associer le fichier à l'objet QRCode
+                # Création de l'objet QRCode avec URL
                 qr = QRCode.objects.create(
                     reservation=reservation,
                     code=code,
-                    image=django_file)
+                    image=qr_image_url
+                )
 
         except Offre.DoesNotExist:
             continue
@@ -138,4 +166,4 @@ def mock_payment(request):
     current_user.save()
 
     reservations = Reservation.objects.filter(transaction=transaction).select_related('offre', 'qrcode')
-    return render(request, 'recapitulatif.html', {'reservations': reservations,'transaction': transaction})
+    return render(request, 'recapitulatif.html', {'reservations': reservations, 'transaction': transaction})

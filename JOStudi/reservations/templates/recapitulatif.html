@@ -31,10 +31,10 @@
         
         <td>
             {% if reservation.qrcode.image %}
-                <a href="{{ reservation.qrcode.image.url }}" download>
-                    <img src="{{ reservation.qrcode.image.url }}" alt="QR Code" width="80" height="80">
+                <a href="{{ reservation.qrcode.image }}" download>
+                    <img src="{{ reservation.qrcode.image }}" alt="QR Code" width="80" height="80">
                 </a><br>
-                <small><a href="{{ reservation.qrcode.image.url }}" download>Télécharger</a></small>
+                <small><a href="{{ reservation.qrcode.image }}" download>Télécharger</a></small>
             {% else %}
                 <code>{{ reservation.qrcode.code }}</code>
             {% endif %}
