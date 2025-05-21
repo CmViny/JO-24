@@ -11,7 +11,7 @@ class Utilisateur(models.Model):
     adresse = models.CharField(max_length=255, null=True, blank=True)
     date_inscription = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
-    old_cart = models.CharField(max_length=200, blank=True, null=True)
+    old_cart = models.TextField(blank=True, null=True)
     code_utilisateur = models.CharField(max_length=64, blank=True, null=True)
     totp_secret = encrypt(models.CharField(max_length=32, blank=True, null=True))
     is_2fa_verified = models.BooleanField(default=False)
