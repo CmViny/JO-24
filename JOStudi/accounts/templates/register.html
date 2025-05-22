@@ -8,7 +8,7 @@
 {% block body_class %}navbar-alternative{% endblock %}
 {% block content %}
 
-    <!-- Header Inscription-->
+    <!-- Header Register-->
     <header class="bg-dark py-5 mb-3">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
@@ -18,7 +18,7 @@
         </div>
     </header>
     
-    <!-- Formulaire d'inscription-->
+    <!-- Register Form-->
     <div class="container d-flex justify-content-center align-items-center">
         <form method="POST" action="{% url 'register' %}" style="max-width: 400px; width: 100%;">
             {% csrf_token %}

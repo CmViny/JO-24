@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById(`prix_unitaire_${key}`).textContent = `${data.updated_price} €`;
                 document.getElementById(`prix_total_${key}`).textContent = `${data.total_price} €`;
 
-                // Mettre à jour le total du panier
+                // Update cart total
                 document.getElementById("total_cart").textContent = `${data.cart_total} €`;
             }
         });
@@ -126,14 +126,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const data = await response.json();
                 document.getElementById("cart_quantity").textContent = data.cart_quantity;
 
-                // Vérifier si le panier est vide
+                // Check if the cart is empty
                 const remainingCards = document.querySelectorAll('.card');
 
                 if (remainingCards.length === 0) {
-                    // Aucun produit dans le panier
+                    // No products in the cart
                     document.getElementById("cart-container").innerHTML = '<center><p>Votre panier est vide.</p></center>';
                 } else {
-                    // Mettre à jour le total du panier
+                    // Update cart total
                     document.getElementById("total_cart").textContent = `${data.cart_total} €`;
                 }
             } else {

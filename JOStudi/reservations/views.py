@@ -23,7 +23,7 @@ load_dotenv()
 def commandes(request):
     current_user = Utilisateur.objects.get(user=request.user)
 
-    # Récupère toutes les transactions réussies de l'utilisateur
+    # Retrieves all successful transactions from the user
     transactions = Transaction.objects.filter(
         reservation__utilisateur=current_user,
         statut=Transaction.REUSSIE
@@ -113,7 +113,7 @@ def mock_payment(request):
     cart = Cart(request)
     current_user = Utilisateur.objects.get(user=request.user)
 
-    # Créer une transaction simulée
+    # Create a simulated transaction
     total_amount = cart.get_totals()
     transaction = Transaction.objects.create(
         montant=total_amount,
@@ -121,7 +121,7 @@ def mock_payment(request):
     )
     transaction.generate_code_transaction()
 
-    # Récupérer les infos de Supabase
+    # Retrieve information from Supabase
     supabase_url = os.getenv('SUPABASE_URL')
     supabase_key = os.getenv('SUPABASE_KEY')
     bucket = os.getenv('SUPABASE_BUCKET')
@@ -129,7 +129,7 @@ def mock_payment(request):
     if not all([supabase_url, supabase_key, bucket]):
         raise EnvironmentError("Une ou plusieurs variables d’environnement Supabase sont manquantes.")
 
-    # Récupérer le code utilisateur
+    # Retrieve user code
     code_utilisateur = current_user.code_utilisateur
 
     for item in cart.cart.values():
@@ -151,7 +151,7 @@ def mock_payment(request):
                 code = f"{code_utilisateur}_{transaction.code_transaction}_{uuid.uuid4().hex[:6]}"
                 qr_url = request.build_absolute_uri(reverse('billet_numerique', args=[code]))
 
-                # Upload QR code avec paramètres explicites
+                # Upload QR code with explicit parameters
                 qr_image_url = upload_qr_code_to_supabase(code, qr_url, supabase_url, supabase_key, bucket)
 
                 QRCode.objects.create(

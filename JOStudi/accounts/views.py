@@ -17,10 +17,10 @@ import qrcode # type: ignore
 @login_required
 def activate_2fa(request):
     utilisateur = request.user.utilisateur
-    # Si 2FA déjà activée
+    # If 2FA already enabled
     if utilisateur.is_2fa_enabled:
         return redirect('verify_2fa')
-    # Génère un secret temporaire stocké uniquement en session
+    # Generates a temporary secret stored only in session
     secret = pyotp.random_base32()
     request.session['temp_totp_secret'] = secret
 
@@ -103,7 +103,7 @@ def login_user(request):
                 except json.JSONDecodeError:
                     pass
 
-            # 🔐 Gérer la redirection 2FA
+            # Manage 2FA redirection
             if hasattr(user, 'utilisateur') and user.utilisateur.totp_secret:
                 request.session['is_2fa_verified'] = False
                 return redirect('verify_2fa')

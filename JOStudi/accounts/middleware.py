@@ -25,7 +25,6 @@ class TwoFactorRequiredMiddleware:
         utilisateur = getattr(request.user, 'utilisateur', None)
         if utilisateur and utilisateur.is_2fa_enabled:
             if not request.session.get('is_2fa_verified'):
-                # Protection redémarrage
                 logout(request)
                 return redirect('/accounts/login')
 

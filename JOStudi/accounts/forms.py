@@ -102,7 +102,7 @@ class UpdateProfileForm(forms.ModelForm):
         utilisateur_instance = kwargs.pop('utilisateur_instance', None)
         super().__init__(*args, **kwargs)
 
-        # Champs User
+        # User fields
         self.fields['username'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': self.field_attributes['username']['placeholder']
@@ -110,7 +110,7 @@ class UpdateProfileForm(forms.ModelForm):
         self.fields['username'].label = ''
         self.fields['username'].help_text = self.field_attributes['username']['help_text']
 
-        # Pré-remplir les champs du modèle Utilisateur si instance fournie
+        # Pre-fill User template fields if instance provided
         if utilisateur_instance:
             self.fields['age'].initial = utilisateur_instance.age
             self.fields['telephone'].initial = utilisateur_instance.telephone
