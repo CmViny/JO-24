@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{%block title %}
+    <title>Offre</title>
+{% endblock %}
+
+{% block body_class %}navbar-alternative{% endblock %}
+{% block content %}
+
+
+    <!-- Header Offre-->
+    <header class=" bg-dark py-5 mb-3">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h3 class="display-3 fw-bolder">Détails</h3>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Offre Body-->
+    <div class="card mb-2">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ offre.image_url }}" class="img-fluid rounded-start" style="height:auto" alt="{{ item.offre.titre }}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ offre.titre }}</h5>
+              <p class="card-text"><strong>Description :</strong> {{ offre.description }}</p>
+
+              <p class="card-text">
+                <strong>Prix :</strong>
+                <span id="prix_affiche">{{ prix_solo }}</span> €
+              </p>
+              
+              <p class="card-text"><strong>Type :</strong> {{ offre.get_type_billet_display }}</p>
+              <p class="card-text"><strong>Date disponible :</strong> {{ offre.date_disponible }}</p>
+
+              <!--Type-->
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="type_billet" class="form-label">Type de billet :</label>
+                  <select id="type_billet" class="form-select">
+                    <option value="solo">Solo</option>
+                    <option value="duo">Duo</option>
+                    <option value="famille">Famille</option>
+                  </select>
+                </div>
+
+              <!--Quantity-->
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="quantity_{{ offre.id }}">Quantité :</label>
+                  <select class="form-select form-select-sm mb-2" id="quantity_{{ offre.id }}">                  
+                        {% for i in 1|to:6 %}
+                            <option value="{{ i }}" {% if item.quantity == i %}selected{% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="button" data-product="{{ offre.id }}" class="btn btn-secondary" id="add-cart">Ajouter au panier</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!--Script Cart Add-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addToCartButton = document.getElementById("add-cart");
+
+    addToCartButton.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        const offreId = this.dataset.product;
+        const typeBillet = document.getElementById("type_billet").value;
+        const quantity = document.getElementById(`quantity_${offreId}`).value;
+        const csrfToken = "{{ csrf_token }}";
+
+        const formData = new FormData();
+        formData.append("offre_id", offreId);
+        formData.append("type_billet", typeBillet);
+        formData.append("quantity", quantity);
+        formData.append("action", "post");
+
+        try {
+            const response = await fetch("{% url 'cart_add' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            location.reload();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+  });
+</script>
+
+<!--Script Offers Price-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const typeBilletSelect = document.getElementById("type_billet");
+    const prixElement = document.getElementById("prix_affiche");
+    const basePrix = parseFloat("{{ offre.prix }}");
+
+    const multiplicateurs = {
+      solo: 1,
+      duo: 1.5,
+      famille: 2
+    };
+
+    typeBilletSelect.addEventListener("change", function () {
+      const selectedType = this.value;
+      const multiplier = multiplicateurs[selectedType] || 1;
+      const newPrice = (basePrix * multiplier).toFixed(2);
+      prixElement.textContent = newPrice;
+    });
+  });
+</script>
+
+
+{% endblock%}

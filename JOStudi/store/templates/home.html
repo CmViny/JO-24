@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %} 
+{% block content %}
+ <!-- Masthead-->
+ <header class="masthead">
+    <div class="container px-4 px-lg-5 h-100">
+        <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
+            <div class="col-lg-8 align-self-end">
+                <h1 class="text-white font-weight-bold">🇫🇷 Bienvenue aux Jeux Olympiques de Paris 2024</h1>
+                <hr class="divider" />
+            </div>
+            <div class="col-lg-8 align-self-baseline">
+                <p class="text-white-75 mb-5">Découvrez l'événement sportif le plus attendu de la décennie, au cœur de la Ville Lumière.<br/><br/>
+                    Les Jeux Olympiques de 2024 rassembleront des centaines d’épreuves sportives réparties sur des disciplines variées, dans des lieux emblématiques au cœur de Paris.<br/><br/>
+                    
+                    Notre plateforme vous permet de réserver facilement vos e-tickets pour assister aux compétitions, avec un accès rapide, sécurisé, et 100 % numérique grâce à un système de QR Codes.<br/><br/>
+                    Choisissez vos épreuves préférées, sélectionnez un type de billet (solo, duo, famille) et vivez l’émotion olympique comme jamais auparavant.</p>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Services-->
+<section class="page-section" id="services">
+    <div class="container px-4 px-lg-5">
+        <h2 class="text-center mt-0">À Votre Service</h2>
+        <hr class="divider" />
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-5">
+                    <div class="mb-2"><i class="bi-gem fs-1 text-primary"></i></div>
+                    <h3 class="h4 mb-2">Réservation Simplifiée</h3>
+                    <p class="text-muted mb-0">Accédez rapidement aux billets numériques pour vos épreuves préférées, en quelques clics seulement.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-5">
+                    <div class="mb-2"><i class="bi-laptop fs-1 text-primary"></i></div>
+                    <h3 class="h4 mb-2">Billet en un clic</h3>
+                    <p class="text-muted mb-0">Choisissez, réservez, recevez instantanément votre e-ticket prêt à l’usage.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-5">
+                    <div class="mb-2"><i class="bi-globe fs-1 text-primary"></i></div>
+                    <h3 class="h4 mb-2">Expérience sur mesure</h3>
+                    <p class="text-muted mb-0">Choisissez les épreuves et les billets qui vous conviennent, en toute liberté.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-5">
+                    <div class="mb-2"><i class="bi-heart fs-1 text-primary"></i></div>
+                    <h3 class="h4 mb-2">Pensé pour Vous</h3>
+                    <p class="text-muted mb-0">Notre plateforme a été conçue pour être fluide, intuitive, et accessible à tous les fans des Jeux Olympiques.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Portfolio-->
+<div id="portfolio">
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            {% for offre in offres %}
+            <div class="col-lg-3 col-sm-6">
+                <a class="portfolio-box" href="{% url 'offer' pk=offre.id %}" title="{{ offre.titre }}">
+                    <img class="img-fluid" src="{{ offre.image_url }}" alt="{{ offre.titre }}" style="height:50vh"/>
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50">Billet</div>
+                        <div class="project-name">{{ offre.titre }}</div>
+                    </div>
+                </a>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

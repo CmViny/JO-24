@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ticket border rounded p-4 shadow mt-5">
+    <h2>{{ offre.titre }}</h2>
+    <p><strong>Type de billet :</strong> {{ reservation.type_billet|title }}</p>
+    <p><strong>Date :</strong> {{ offre.date_disponible }}</p>
+    <p><strong>Nom :</strong> {{ utilisateur.user.last_name }}</p>
+    <p><strong>Prénom :</strong> {{ utilisateur.user.first_name }}</p>
+    <p><strong>Code :</strong> {{ qr.code }}</p>
+    <img src="{{ qr.image }}" alt="QR Code">
+</div>
+{% endblock %}
